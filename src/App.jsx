@@ -8,6 +8,9 @@ function tasksReducer(tasks, action) {
     case ("add_task"): {
       return [...tasks, {id: action.id, text: action.text, done: false}]
     }
+    case ("change_status"): {
+      return tasks.map(t => (t.id === action.id) ? {...t, done:!t.done}: {...t, done: t.done})
+    }
     default: {
       throw new Error("Invalid action type: " + action.type);
     }
@@ -26,11 +29,18 @@ function App() {
     })
   }
 
+  const handleChangeStatus = (id) => {
+    dispatch({
+      type: "change_status",
+      id: id
+    })
+  }
+
   return (
     <>
       <h1>ToDo using useReducer!</h1>
       <AddTask handleAddTask={handleAddTask}/>
-      <TaskList tasks={tasks}/>
+      <TaskList tasks={tasks} handleChangeStatus={handleChangeStatus}/>
     </>
   )
 }
